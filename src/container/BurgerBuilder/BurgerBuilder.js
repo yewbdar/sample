@@ -14,10 +14,19 @@ class BurgerBuilder extends Component {
             salad : 0,
             bacon : 0,
             cheese : 0,
-            meat : 2,
+            meat : 0,
         },
         startBuild:false,
-        totalPrice:4
+        totalPrice:4,
+        purchasable:false
+    }
+    updatePurchaseState(){
+         const ingerident= {...this.state.ingerident}
+         const sum = Object.keys(ingerident)
+                        .map(igKey => {
+                            return ingerident[igKey]
+                        }).reduce((sum , el)=> sum + el,0)
+        this.setState({purchasable:sum > 0})
     }
     addIngredientHandler = (type) => {
      const oldCount = this.state.ingerident[type];
@@ -47,7 +56,10 @@ class BurgerBuilder extends Component {
                 <BuildControler 
                 addIngredient={this.addIngredientHandler} 
                 ingeridnt={this.state.ingerident}
-                lessIngredient ={this.removeIngredientHandler}/>
+                lessIngredient ={this.removeIngredientHandler}
+                totalPrice={this.state.totalPrice}
+                purchasable={this.updatePurchaseState}/>
+                
             </React.Fragment>
         )
     }
