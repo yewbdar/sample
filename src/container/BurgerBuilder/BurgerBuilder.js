@@ -2,6 +2,8 @@ import React , {Component} from 'react'
 
 import Burger from '../../component/burger/Burger'
 import BuildControler from '../../component/burger/buildControler/BuildControlers'
+import Modal from '../../component/UI/Modal/Modal'
+import OrderSummery from '../../component/burger/OrderSummery/OrderSummery'
 const INGERIDENT_PRICES = {
     salad:0.5,
     cheese : 0.4,
@@ -18,15 +20,16 @@ class BurgerBuilder extends Component {
         },
         startBuild:false,
         totalPrice:4,
-        purchasable:false
+        purchasable:false,
+        purchasing:false
     }
-    updatePurchaseState(){
-         const ingerident= {...this.state.ingerident}
+    updatePurchaseState =(ingerident)=> {
          const sum = Object.keys(ingerident)
                         .map(igKey => {
                             return ingerident[igKey]
                         }).reduce((sum , el)=> sum + el,0)
         this.setState({purchasable:sum > 0})
+        console.log(sum > 0 , sum)
     }
     addIngredientHandler = (type) => {
      const oldCount = this.state.ingerident[type];
@@ -37,6 +40,7 @@ class BurgerBuilder extends Component {
      const oldPrice=this.state.totalPrice;
      const newPrice=oldPrice + priceAddition;
      this.setState({totalPrice : newPrice , ingerident:updatedIngredient})
+     this.updatePurchaseState(updatedIngredient);
     }
     removeIngredientHandler = (type)=>{
         const oldCount = this.state.ingerident[type];
@@ -45,21 +49,36 @@ class BurgerBuilder extends Component {
         const updatedIngredient = {...this.state.ingerident}
         updatedIngredient[type] = updatedCount;
         const priceAddition = INGERIDENT_PRICES[type];
-        const oldPrice=this.state.totalPrice;
-        const newPrice=oldPrice - priceAddition;
+        const oldPrice = this.state.totalPrice;
+        const newPrice = oldPrice - priceAddition;
         this.setState({totalPrice : newPrice , ingerident:updatedIngredient})
+        this.updatePurchaseState(updatedIngredient);
+    }
+    handlePurchasing=()=>{
+        this.setState({purchasing:true})
+    }
+    handletCloseModal =()=>{
+        this.setState({purchasing:false})
+    }
+    purchaseContinueHandler =()=>{
+        alert('you continue!')
     }
     render(){
         return(
             <React.Fragment>
+                 <Modal show={this.state.purchasing} closeModal={this.handletCloseModal}>
+                    <OrderSummery ingerident={this.state.ingerident} 
+                    closeModal={this.handletCloseModal}
+                    purchaseContinueHandler={this.purchaseContinueHandler}/>
+                </Modal>
                 <Burger ingerident={this.state.ingerident} startBuild={this.state.startBuild}/>
                 <BuildControler 
                 addIngredient={this.addIngredientHandler} 
                 ingeridnt={this.state.ingerident}
                 lessIngredient ={this.removeIngredientHandler}
                 totalPrice={this.state.totalPrice}
-                purchasable={this.updatePurchaseState}/>
-                
+                purchasable={this.state.purchasable}
+                orderHandler={this.handlePurchasing}/>
             </React.Fragment>
         )
     }

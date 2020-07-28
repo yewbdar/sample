@@ -27,3 +27,12 @@
 
 
 }
+.OrderButton:disabled{
+    background-color: #c7c6c6;
+    cursor: not-allowed;
+    border: 1px solid #ccc;
+    columns: #888888;
+}
+.OrderButton:not(:disabled){
+    animation: enable 0.3s linear
+}
