@@ -69,7 +69,8 @@ class BurgerBuilder extends Component {
                  <Modal show={this.state.purchasing} closeModal={this.handletCloseModal}>
                     <OrderSummery ingerident={this.state.ingerident} 
                     closeModal={this.handletCloseModal}
-                    purchaseContinueHandler={this.purchaseContinueHandler}/>
+                    purchaseContinueHandler={this.purchaseContinueHandler}
+                    totalPrice={this.state.totalPrice}/>
                 </Modal>
                 <Burger ingerident={this.state.ingerident} startBuild={this.state.startBuild}/>
                 <BuildControler 
